@@ -42,7 +42,8 @@ app = App(
 )
 
 def edit(old, new):
-	print(new)
+	new = new.strip(' ')
+	# print(new)
 
 	if new == "":
 		# spellcheck
@@ -63,7 +64,7 @@ def edit(old, new):
 		# completely redo
 		return new[1:]
 	
-	elif re.match('^(<@.*?>)+$', new):
+	elif re.match('^(<@.*?>\s?)+$', new):
 		# add mention
 		return new + " " + old
 	
@@ -74,7 +75,7 @@ def edit(old, new):
 		if bestmatch[1] > 50:
 			return old.replace(bestmatch[0], new)
 		else:
-			return old
+			return old + " " + new
 
 	else:
 		# just append
