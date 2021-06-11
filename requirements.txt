@@ -1,0 +1,3 @@
+pyspellchecker
+slack_bolt
+python-Levenshtein
