@@ -32,8 +32,8 @@ app = App(
 	oauth_settings=OAuthSettings(
 		client_id=os.environ.get("CLIENT_ID"),
 		client_secret=os.environ.get("CLIENT_SECRET"),
-		scopes=[],
-		user_scopes=["chat:write", "channels:history"],
+		scopes=["commands", "chat:write"],
+		user_scopes=["chat:write", "channels:history", "groups:history", "im:history", "mpim:history"],
 		redirect_uri=None,
 		install_path="/",
 		redirect_uri_path="/slack/oauth_redirect",
@@ -88,7 +88,7 @@ def editors(command, ack, client):
 	user = command['user_id']
 	text = "*:zap: Lightning Edit Users:*\n"
 	for u in db.keys():
-		text += f" * <@{u}>\n"
+		text += f":large_green_circle: <@{u}>\n"
 	text += f"\nYou, (<@{user}>), have "
 
 	if user in db.keys():
@@ -109,6 +109,7 @@ def handle_edit(message, say, ack, client):
 	ack()
 
 	thismessage = message
+	# print(message)
 	user = thismessage['user']
 	channel = thismessage['channel']
 	raw_text = thismessage['text']
@@ -118,16 +119,30 @@ def handle_edit(message, say, ack, client):
 	if user not in db: return
 
 	userclient = WebClient(token=db[user])
-	messages = userclient.conversations_history(channel=channel)['messages']
+
+	if 'thread_ts' in thismessage:
+		messages = userclient.conversations_replies(channel=channel,ts=thismessage['thread_ts'])['messages']
+	else:
+		messages = userclient.conversations_history(channel=channel)['messages']
 
 	messages = filter(lambda i: 'user' in i and i['user']==user, messages)
-	old_message = [*messages][amount]
-	newtext = edit(old_message['text'], text)
-	userclient.chat_update(
-		channel = channel,
-		ts = old_message['ts'],
-		text = newtext,
-	)
+	messages = list(messages)
+
+	try:
+		old_message = messages[amount]
+		newtext = edit(old_message['text'], text)
+		userclient.chat_update(
+			channel = channel,
+			ts = old_message['ts'],
+			text = newtext,
+		)
+	except:
+		client.chat_postEphemeral(
+			attachments = [],
+			channel = channel,
+			user = user,
+			text = 'Sorry, I couldn\'t find anything to delete! Prefix your text with a comma or something in order to prevent me from deleting it.',
+		)
 	userclient.chat_delete(channel=channel,ts=thismessage['ts'])
 
 @app.event('message')
