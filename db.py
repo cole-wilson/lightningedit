@@ -46,7 +46,7 @@ class SQL:
 
 	def __getitem__(self, key):
 		self.cursor.execute('SELECT token FROM users WHERE id=%s', [key])
-		return self.cursor.fetchone()[0]
+		return self.cursor.fetchone()
 
 	def keys(self):
 		return self.users
