@@ -10,6 +10,7 @@ The sytax of Lightning Edit is extremely simple, just post the edited word with 
 For example, if I had sent `their` instead of `they're`, all I would have to do is send another message with `*they're` and Lightning Edit will edit your original message with the change.
 
 You can do more that just edit single words! Here are some other features:
+ - `sed` style replacement! Like so: `s/regex_to_replace/what_with/flags`
  - To correct a single word, just type it after the asterisk: `*there`.
  - Want to edit a message that isn't your most recent? Just add more asterisks. `**there` will edit your second most recvent message.
  - Forgot to mention someone? Just type their names like `*@goat` or `*@goat @cow`, and the mention will be prepended to your original message.
