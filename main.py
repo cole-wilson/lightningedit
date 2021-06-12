@@ -113,6 +113,7 @@ def editors(command, ack, client):
 
 @app.message(r"^\*.*$")
 def handle_edit(message, say, ack, client):
+	print('>> message <<')
 	ack()
 
 	thismessage = message
