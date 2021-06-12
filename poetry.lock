@@ -9,12 +9,86 @@ version = "0.18.0"
 [package.extras]
 speedup = ["python-levenshtein (>=0.12)"]
 
+[[package]]
+category = "main"
+description = "Fuzzy String search algorithm using Soundex for Indian language"
+name = "inexactsearch"
+optional = false
+python-versions = "*"
+version = "1.0.2"
+
+[package.dependencies]
+silpa_common = ">=0.3"
+soundex = ">=1.0"
+
+[[package]]
+category = "main"
+description = "A tiny LRU cache implementation and decorator"
+name = "repoze.lru"
+optional = false
+python-versions = "*"
+version = "0.7"
+
+[package.extras]
+docs = ["sphinx"]
+testing = ["coverage", "nose"]
+
+[[package]]
+category = "main"
+description = "Common functions for SILPA and related modules"
+name = "silpa-common"
+optional = false
+python-versions = "*"
+version = "0.3"
+
+[package.dependencies]
+"repoze.lru" = "*"
+
+[[package]]
+category = "main"
+description = "Soundex algorith implementation for English and Indian languages"
+name = "soundex"
+optional = false
+python-versions = "*"
+version = "1.1.3"
+
+[package.dependencies]
+silpa_common = ">=0.3"
+
+[[package]]
+category = "main"
+description = "Indian Language Spellchecker Library"
+name = "spellchecker"
+optional = false
+python-versions = "*"
+version = "0.4"
+
+[package.dependencies]
+inexactsearch = "*"
+setuptools = "*"
+
 [metadata]
-content-hash = "f904ae5efd0f72275f86ad3e3510ead507f016cb2cfda42ad3dc20d3a3291e94"
+content-hash = "163585469e43a62269fde79e805bf01c620173d843f5e7897be20c9b9d024b4f"
 python-versions = "^3.8"
 
 [metadata.files]
 fuzzywuzzy = [
     {file = "fuzzywuzzy-0.18.0-py2.py3-none-any.whl", hash = "sha256:928244b28db720d1e0ee7587acf660ea49d7e4c632569cad4f1cd7e68a5f0993"},
     {file = "fuzzywuzzy-0.18.0.tar.gz", hash = "sha256:45016e92264780e58972dca1b3d939ac864b78437422beecebb3095f8efd00e8"},
+]
+inexactsearch = [
+    {file = "inexactsearch-1.0.2.tar.gz", hash = "sha256:b7df09c46e1ea73996449ceb4df265483e4dc6b61dac2ea4df6f2e5ad8d53b75"},
+]
+"repoze.lru" = [
+    {file = "repoze.lru-0.7-py3-none-any.whl", hash = "sha256:f77bf0e1096ea445beadd35f3479c5cff2aa1efe604a133e67150bc8630a62ea"},
+    {file = "repoze.lru-0.7.tar.gz", hash = "sha256:0429a75e19380e4ed50c0694e26ac8819b4ea7851ee1fc7583c8572db80aff77"},
+]
+silpa-common = [
+    {file = "silpa_common-0.3.tar.gz", hash = "sha256:d4a4366193fd606fdcbf6d6e996a57a8bed9ff54ec8e2f798d2b7bc885dde3fd"},
+]
+soundex = [
+    {file = "soundex-1.1.3.tar.gz", hash = "sha256:f837692afab3dc4f0132a36d8e8a8384f6ac8349fffdf5103291c3d1c2d48ad3"},
+]
+spellchecker = [
+    {file = "spellchecker-0.4.tar.gz", hash = "sha256:7ebe5480641d2fa555e4a9d0592e6f6866d095c37c5563e38a349f8ce26358c7"},
 ]

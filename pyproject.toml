@@ -7,6 +7,7 @@ authors = ["cwi <<>>"]
 [tool.poetry.dependencies]
 python = "^3.8"
 fuzzywuzzy = "^0.18.0"
+spellchecker = "^0.4"
 
 [tool.poetry.dev-dependencies]
 
