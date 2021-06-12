@@ -35,5 +35,8 @@ class SQL:
 		self.cursor.execute('SELECT token FROM users WHERE id=%s', [key])
 		return self.cursor.fetchall()[0][0]
 
+	def __contains(self, key):
+		return key in self.users
+
 	def keys(self):
 		return self.users
