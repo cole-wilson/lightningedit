@@ -37,13 +37,15 @@ class SQL:
 		if key in self.users:
 			self.cursor.execute("UPDATE users SET token=%s WHERE id=%s", (value, key))
 		else:
+
+			self.users.append(key)
 			self.cursor.execute("INSERT INTO users (id, token) VALUES (%s, %s)", (key, value))
 		self.db.commit()
-		self.cursor.execute('SELECT id FROM users')
-		self.users = list(map(lambda i: i[0], self.cursor.fetchall()))
+
+
 
 	def __getitem__(self, key):
-		return self.cursor.execute('SELECT token WHERE id=%s', [key]).fetchone()[0]
+		return self.cursor.execute('SELECT token FROM users WHERE id=%s', [key]).fetchone()[0]
 
 	def keys(self):
 		return self.users
