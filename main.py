@@ -54,7 +54,7 @@ def edit(old, new):
 				out += spell.correction(word) + " "
 		return out
 
-	elif re.match(r"s(/)(.*?)\1(.*?)\1.*?", new):
+	elif re.match(r"s?(/|!)(.*?)\1(.*?)\1.*?", new):
 		_, a, b, f = re.findall(r"s(.)(.*?)\1(.*?)\1(.*?)", new)[0]
 		b = re.sub(r"\$(\d*)", r"\\1", b)
 		flags = []
