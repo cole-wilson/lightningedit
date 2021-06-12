@@ -2,3 +2,4 @@ pyspellchecker
 slack_bolt
 python-Levenshtein
 fuzzywuzzy
+mysql-connector-python
