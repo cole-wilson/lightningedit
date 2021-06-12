@@ -31,7 +31,7 @@ class SQL:
 		# 		"CREATE TABLE users (id VARCHAR(15), token VARCHAR(400))"
 		# 	)
 		self.cursor.execute('SELECT id FROM users')
-		self.users = list(map(lambda i: [0], self.cursor.fetchall()))
+		self.users = list(map(lambda i: i[0], self.cursor.fetchall()))
 
 	def __setitem__(self, key, value):
 		if key in self.users:
@@ -40,10 +40,10 @@ class SQL:
 			self.cursor.execute("INSERT INTO users (id, token) VALUES (%s, %s)", (key, value))
 		self.db.commit()
 		self.cursor.execute('SELECT id FROM users')
-		self.users = list(map(lambda i: [0], self.cursor.fetchall()))
+		self.users = list(map(lambda i: i[0], self.cursor.fetchall()))
 
 	def __getitem__(self, key):
 		return self.cursor.execute('SELECT token WHERE id=%s', [key]).fetchone()[0]
-		
+
 	def keys(self):
 		return self.users
