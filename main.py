@@ -113,7 +113,6 @@ def editors(command, ack, client):
 
 @app.message(r"^\*.*$")
 def handle_edit(message, say, ack, client):
-	print('>> message <<')
 	ack()
 
 	thismessage = message
@@ -154,6 +153,7 @@ def handle_edit(message, say, ack, client):
 			text = 'Sorry, I couldn\'t find anything to delete! Prefix your text with a comma or something in order to prevent me from deleting it.',
 		)
 	userclient.chat_delete(channel=channel,ts=thismessage['ts'])
+	print('>> message handled <<')
 
 @app.event('message')
 def _(ack): ack()
