@@ -1,20 +1,15 @@
 import os
 import re
-
-try:
-	from slack_bolt import App
-except ModuleNotFoundError:
-	os.system('pip3 install slack_bolt')
-	from slack_bolt import App
-
-from replit import db
+from slack_bolt import App
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_bolt.oauth.callback_options import CallbackOptions
 from slack_bolt.response import BoltResponse
 from slack_sdk import WebClient
 from spellchecker import SpellChecker
 from fuzzywuzzy import fuzz
+from db import SQL
 
+db = SQL()
 spell = SpellChecker()
 
 def success(args):
