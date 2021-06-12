@@ -128,8 +128,6 @@ def handle_edit(message, say, ack, client):
 	messages = filter(lambda i: 'user' in i and i['user']==user, messages)
 	messages = list(messages)
 
-	print(messages[amount])
-
 	try:
 		old_message = messages[amount]
 		if old_message['text'] == text: return
