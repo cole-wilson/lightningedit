@@ -1,6 +1,5 @@
 import os
 import re
-import sys
 from slack_bolt import App
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_bolt.oauth.callback_options import CallbackOptions
@@ -10,9 +9,10 @@ from spellchecker import SpellChecker
 from fuzzywuzzy import fuzz
 from db import SQL
 
+print('running.')
+
 db = SQL()
 spell = SpellChecker()
-sys.stderr = sys.stdout
 
 def success(args):
 	user_id = args.installation.user_id
