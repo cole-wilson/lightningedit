@@ -121,15 +121,20 @@ def handle_edit(message, say, ack, client):
 	userclient = WebClient(token=db[user])
 
 	if 'thread_ts' in thismessage:
+		return
 		messages = userclient.conversations_replies(channel=channel,ts=thismessage['thread_ts'])['messages']
+		threaded = True
 	else:
 		messages = userclient.conversations_history(channel=channel)['messages']
+		threaded = False
 
 	messages = filter(lambda i: 'user' in i and i['user']==user, messages)
 	messages = list(messages)
 
 	try:
 		old_message = messages[amount]
+		print(old_message)
+		if old_message['text'] == text: return
 		newtext = edit(old_message['text'], text)
 		userclient.chat_update(
 			channel = channel,
