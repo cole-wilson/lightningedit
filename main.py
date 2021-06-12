@@ -56,6 +56,15 @@ def edit(old, new):
 				out += spell.correction(word) + " "
 		return out
 
+	elif re.match(r"s(/)(.*?)\1(.*?)\1.*?", new):
+		_, a, b, f = re.findall(r"s(.)(.*?)\1(.*?)\1(.*?)", new)[0]
+		b = re.sub(r"\$(\d*)", r"\\1", b)
+		flags = []
+		for flag in f:
+			if hasattr(re, flag.upper()):
+				flags.append(getattr(re, flag.upper()))
+		return re.sub(a, b, old, *flags)
+
 	elif new.startswith('+'):
 		# append no matter what
 		return old + " " + new[1:]
@@ -137,7 +146,8 @@ def handle_edit(message, say, ack, client):
 			ts = old_message['ts'],
 			text = newtext,
 		)
-	except:
+	except Exception as err:
+		print(err)
 		client.chat_postEphemeral(
 			attachments = [],
 			channel = channel,
