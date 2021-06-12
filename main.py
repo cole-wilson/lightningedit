@@ -102,7 +102,7 @@ def editors(command, ack, client):
 		text += "successfully installed Lightning Edit!"
 	else:
 		text += "have NOT successfully installed Lightning Edit.\n"
-		text += "Head over to https://lightningedit.cwi.repl.co to get started."
+		text += "Head over to https://lightningedit.colewilson.xyz to get started."
 
 	client.chat_postEphemeral(
 		attachments = [],
