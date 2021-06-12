@@ -4,17 +4,44 @@ import mysql.connector
 # for i in os.environ:
 # 	print(i, os.environ[i])
 
-mydb = mysql.connector.connect(
-  host=os.environ['MYSQLHOST'],
-  user=os.environ['MYSQLUSER'],
-  password=os.environ['MYSQLPASSWORD'],
-	port=os.environ['MYSQLPORT']
-)
+
 
 class SQL:
+	users = []
+
+	def __init__(self):
+		setup = {
+			"host":os.environ['MYSQLHOST'],
+			"user":os.environ['MYSQLUSER'],
+			"password":os.environ['MYSQLPASSWORD'],
+			"port":int(os.environ['MYSQLPORT'])
+		}
+		try:
+			self.db = mysql.connector.connect(database='main', **setup)
+		except:
+			self.db = mysql.connector.connect(**setup)
+			cursor = self.db.cursor()
+			cursor.execute("CREATE DATABASE main")
+			self.db = mysql.connector.connect(database='main', **setup)
+
+		self.cursor = self.db.cursor()
+		self.cursor.execute("SHOW TABLES")
+		if 'users' not in self.cursor:
+			self.cursor.execute(
+				"CREATE TABLE users (id VARCHAR(15), token VARCHAR(400))"
+			)
+		self.cursor.execute('SELECT id FROM users')
+		self.users = self.cursor.fetchall()
+
 	def __setitem__(self, key, value):
-		pass
+		if key in self.users:
+			self.cursor.execute("UPDATE users SET token=%s WHERE id=%s", (value, key))
+		else:
+			self.cursor.execute("INSERT INTO users (id, token) VALUES (%s, %s)", (key, value))
+		self.db.commit()
+
 	def __getitem__(self, key):
-		return ""
+		return self.cursor.execute('SELECT token WHERE id=%s', [key]).fetchone()
+
 	def keys(self):
-		return []
+		return self.users
