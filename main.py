@@ -7,11 +7,15 @@ from slack_bolt.response import BoltResponse
 from slack_sdk import WebClient
 from spellchecker import SpellChecker
 from fuzzywuzzy import fuzz
-from db import SQL
+# from db import SQL
 
 print('running.')
 
-db = SQL()
+class DB:
+	def __getattribute__(self, name):
+		return lambda i: i
+
+db = DB()
 spell = SpellChecker()
 
 def success(args):
