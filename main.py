@@ -18,6 +18,7 @@ def success(args):
 	user_id = args.installation.user_id
 	user_token = args.installation.user_token
 	db[user_id] = user_token
+	print(db.keys())
 	return BoltResponse(status=200,body="success!")
 
 def failure(args):
