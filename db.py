@@ -20,11 +20,11 @@ class SQL:
 			self.db = mysql.connector.connect(database='main', **setup)
 		except:
 			self.db = mysql.connector.connect(**setup)
-			cursor = self.db.cursor()
+			cursor = self.db.cursor(buffered=True)
 			cursor.execute("CREATE DATABASE main")
 			self.db = mysql.connector.connect(database='main', **setup)
 
-		self.cursor = self.db.cursor()
+		self.cursor = self.db.cursor(buffered=True)
 		self.cursor.execute("SHOW TABLES")
 		# if 'users' not in self.cursor:
 		# 	self.cursor.execute(
