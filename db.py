@@ -1,6 +1,9 @@
 import os
 import mysql.connector
 
+for i in os.environ:
+	print(i, os.environ[i])
+
 # mydb = mysql.connector.connect(
 #   host=os.environ['MYSQLHOST'],
 #   user=os.environ['MYSQLUSER'],
