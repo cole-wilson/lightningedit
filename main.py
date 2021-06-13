@@ -125,7 +125,8 @@ def handle_edit(message, say, ack, client):
 	text = raw_text.lstrip('*').strip(' ')
 	amount = len(raw_text) - len(text)
 
-	if user not in db: return
+	if user not in db:
+		print(user);return
 
 	userclient = WebClient(token=db[user])
 
