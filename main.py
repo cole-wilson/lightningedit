@@ -14,6 +14,13 @@ print('running.')
 spell = SpellChecker()
 db = SQL()
 
+def boot(channel="C0P5NE354"):
+	client = WebClient(token=os.environ['TOKEN'])
+	message = f":party-parrot:I JUST WOKE UP AGAIN! Here's what's new: {os.environ['RAILWAY_GIT_COMMIT_MESSAGE']}."
+	client.chat_postMessage(channel=channel, text=message)
+
+boot()
+
 def success(args):
 	user_id = args.installation.user_id
 	user_token = args.installation.user_token
@@ -30,7 +37,7 @@ app = App(
 	oauth_settings=OAuthSettings(
 		client_id=os.environ.get("CLIENT_ID"),
 		client_secret=os.environ.get("CLIENT_SECRET"),
-		scopes=["commands"],
+		scopes=["commands", "chat:write.public", "chat:write"],
 		user_scopes=["chat:write", "channels:history", "groups:history", "im:history", "mpim:history"],
 		redirect_uri=None,
 		install_path="/",
@@ -55,7 +62,6 @@ def edit(old, new):
 			else:
 				out += spell.correction(word) + " "
 		return out
-
 	elif re.match(sedstyle, new):
 		_, a, b, f = re.findall(sedstyle, new)[0]
 		b = re.sub(r"\$(\d*)", r"\\1", b)
@@ -64,19 +70,15 @@ def edit(old, new):
 			if hasattr(re, flag.upper()):
 				flags.append(getattr(re, flag.upper()))
 		return re.sub(a, b, old, *flags)
-
 	elif new.startswith('+'):
 		# append no matter what
 		return old + " " + new[1:]
-	
 	elif new.startswith('!'):
 		# completely redo
 		return new[1:]
-	
 	elif re.match('^(<@.*?>\s?)+$', new):
 		# add mention
 		return new + " " + old
-	
 	elif len(new.split()) == 1:
 		# fuzzy replacement
 		ranked = [(word, fuzz.ratio(new, word)) for word in old.split()]
@@ -85,10 +87,9 @@ def edit(old, new):
 			return old.replace(bestmatch[0], new)
 		else:
 			return old + " " + new
-
 	else:
 		# just append
-		return old + " " + new[1:]
+		return old + " " + new
 
 
 @app.command("/editors")
