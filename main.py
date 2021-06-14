@@ -75,6 +75,8 @@ def edit(old, new):
 	elif new.startswith('!'):
 		# completely redo
 		return new[1:]
+	elif re.match('^-*?$', new):
+		return "~" + old + "~"
 	elif re.match('^(<@.*?>\s?)+$', new):
 		# add mention
 		return new + " " + old
@@ -113,6 +115,36 @@ def editors(command, ack, client):
 		text = text,
 	)
 
+@app.message(r"^\^*?$")
+def upvote(message, say, ack, client):
+	ack()
+
+	thismessage = message
+	user = thismessage['user']
+	channel = thismessage['channel']
+
+	if channel == "C0255PRDR44": return
+	# if user not in db:
+	client.chat_postEphemeral(
+		attachments = [],
+		channel = channel,
+		user = user,
+		text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
+	)
+	return
+
+	userclient = WebClient(token=db[user])
+
+	if 'thread_ts' in thismessage:
+		messages = reversed(userclient.conversations_replies(channel=channel,ts=thismessage['thread_ts'])['messages'])
+	else:
+		messages = userclient.conversations_history(channel=channel)['messages']
+	message = list(messages)[1]
+	userclient.reactions_add(channel=channel,name="upvote",timestamp=message['ts'])
+	userclient.chat_delete(channel=channel,ts=thismessage['ts'])
+
+
+@app.message(r"^-*?$")
 @app.message(r"^\*.*$")
 def handle_edit(message, say, ack, client):
 	ack()
