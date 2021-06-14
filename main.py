@@ -16,7 +16,8 @@ db = SQL()
 
 def boot(channel="C0P5NE354"):
 	client = WebClient(token=os.environ['TOKEN'])
-	message = f":party-parrot:I JUST WOKE UP AGAIN! Here's what's new: {os.environ['RAILWAY_GIT_COMMIT_MESSAGE']}."
+	message = os.getenvb(os.environ['RAILWAY_GIT_COMMIT_MESSAGE'], '<standard redeploy>')
+	message = f":party-parrot:I JUST WOKE UP AGAIN! Here's what's new: {message}."
 	client.chat_postMessage(channel=channel, text=message)
 
 boot()
