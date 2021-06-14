@@ -77,7 +77,7 @@ def edit(old, new):
 		return new[1:]
 	elif re.match('^-*?$', new):
 		return "~" + old + "~"
-	elif re.match('^(<@.*?>\s?)+$', new):
+	elif re.match('^(<@.*?>\s?)*$', new):
 		# add mention
 		return new + " " + old
 	elif len(new.split()) == 1:
@@ -131,7 +131,7 @@ def upvote(message, say, ack, client):
 		user = user,
 		text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
 	)
-	return
+	# return
 
 	userclient = WebClient(token=db[user])
 
