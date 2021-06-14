@@ -16,7 +16,7 @@ db = SQL()
 
 def boot(channel="C0P5NE354"):
 	client = WebClient(token=os.environ['TOKEN'])
-	message = os.getenv(os.environ['RAILWAY_GIT_COMMIT_MESSAGE'], 'redeploy')
+	message = os.getenv('RAILWAY_GIT_COMMIT_MESSAGE', 'redeploy')
 	message = f":party-parrot:I JUST WOKE UP AGAIN! Here's what's new: `{message}`."
 	client.chat_postMessage(channel=channel, text=message)
 
@@ -49,8 +49,6 @@ app = App(
 
 def edit(old, new):
 	new = new.strip(' ')
-	# print(new)
-
 	sedstyle = r"s?(/|!)(.*?)\1(.*?)\1.*?"
 	
 	if new == "":
@@ -120,7 +118,6 @@ def handle_edit(message, say, ack, client):
 	ack()
 
 	thismessage = message
-	# print(message)
 	user = thismessage['user']
 	channel = thismessage['channel']
 	raw_text = thismessage['text']
@@ -129,7 +126,13 @@ def handle_edit(message, say, ack, client):
 
 	if channel == "C0255PRDR44": return
 	if user not in db:
-		print(user);return
+		client.chat_postEphemeral(
+			attachments = [],
+			channel = channel,
+			user = user,
+			text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
+		)
+		return
 
 	userclient = WebClient(token=db[user])
 
