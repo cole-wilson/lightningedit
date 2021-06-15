@@ -39,7 +39,7 @@ app = App(
 		client_id=os.environ.get("CLIENT_ID"),
 		client_secret=os.environ.get("CLIENT_SECRET"),
 		scopes=["commands", "chat:write.public", "chat:write"],
-		user_scopes=["chat:write", "channels:history", "groups:history", "im:history", "mpim:history"],
+		user_scopes=["chat:write", "channels:history", "groups:history", "im:history", "mpim:history", "reactions:write"],
 		redirect_uri=None,
 		install_path="/",
 		redirect_uri_path="/slack/oauth_redirect",
@@ -175,7 +175,7 @@ def handle_edit(message, say, ack, client):
 
 	messages = filter(lambda i: 'user' in i and i['user']==user, messages)
 	messages = list(messages)
-	print('a')
+
 	try:
 		old_message = messages[amount]
 		if old_message['text'] == text: return
