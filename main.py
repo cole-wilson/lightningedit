@@ -11,6 +11,7 @@ from spellchecker import SpellChecker
 from fuzzywuzzy import fuzz
 from db import SQL
 
+
 print('running.')
 
 logging.basicConfig(level=logging.WARNING)
