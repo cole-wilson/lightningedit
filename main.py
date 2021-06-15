@@ -1,6 +1,7 @@
 import os
 import re
 import time
+import logging
 from slack_bolt import App
 from slack_bolt.oauth.oauth_settings import OAuthSettings
 from slack_bolt.oauth.callback_options import CallbackOptions
@@ -11,6 +12,8 @@ from fuzzywuzzy import fuzz
 from db import SQL
 
 print('running.')
+
+logging.basicConfig(level=logging.WARNING)
 spell = SpellChecker()
 db = SQL()
 
@@ -124,14 +127,14 @@ def upvote(message, say, ack, client):
 	channel = thismessage['channel']
 
 	if channel == "C0255PRDR44": return
-	# if user not in db:
-	client.chat_postEphemeral(
-		attachments = [],
-		channel = channel,
-		user = user,
-		text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
-	)
-	# return
+	if user not in db:
+		client.chat_postEphemeral(
+			attachments = [],
+			channel = channel,
+			user = user,
+			text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
+		)
+		return
 
 	userclient = WebClient(token=db[user])
 
@@ -140,7 +143,10 @@ def upvote(message, say, ack, client):
 	else:
 		messages = userclient.conversations_history(channel=channel)['messages']
 	message = list(messages)[1]
-	userclient.reactions_add(channel=channel,name="upvote",timestamp=message['ts'])
+	try:
+		userclient.reactions_add(channel=channel,name="upvote",timestamp=message['ts'])
+	except:
+		pass
 	userclient.chat_delete(channel=channel,ts=thismessage['ts'])
 
 
@@ -154,7 +160,7 @@ def handle_edit(message, say, ack, client):
 	channel = thismessage['channel']
 	raw_text = thismessage['text']
 	text = raw_text.lstrip('*').strip(' ')
-	amount = len(raw_text) - len(text)
+	amount = max(len(raw_text) - len(text), 1)
 
 	if channel == "C0255PRDR44": return
 	if user not in db:
