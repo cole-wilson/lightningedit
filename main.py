@@ -78,6 +78,9 @@ def edit(old, new):
 	elif new.startswith('!'):
 		# completely redo
 		return new[1:]
+	elif re.match(r"^(\?|!)*$", new):
+		return old + new
+
 	elif re.match('^-*?$', new):
 		return "~" + old + "~"
 	elif re.match('^(<@.*?>\s?)*$', new):
@@ -151,6 +154,7 @@ def upvote(message, say, ack, client):
 
 
 @app.message(r"^-*?$")
+@app.message(r"^(\?|!)*$")
 @app.message(r"^\*.*$")
 def handle_edit(message, say, ack, client):
 	ack()
