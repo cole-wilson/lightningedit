@@ -171,6 +171,7 @@ def random_response(say, body):
 		'"'+"".join(map(lambda i:random.choice((i.upper,i.lower))(),text))+'"'
 	]))
 
+
 @app.message(r"^-*?$")
 @app.message(r"^(\?|!)*$")
 @app.message(r"^\*.*$")
