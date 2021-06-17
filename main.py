@@ -1,6 +1,7 @@
 import os
 import re
 import time
+import random
 import logging
 from slack_bolt import App
 from slack_bolt.oauth.oauth_settings import OAuthSettings
@@ -153,6 +154,22 @@ def upvote(message, say, ack, client):
 		pass
 	userclient.chat_delete(channel=channel,ts=thismessage['ts'])
 
+@app.event("app_mention")
+def random_response(say, body):
+	db['test'] = time.time() # set SQL so it doesn't disconnect
+
+	text = body["event"]["text"]
+	user = body["event"]["user"]
+	say(random.choice([
+		f"Hi <@{user}>, I'm still here!",
+		f"<@{user}> spels reely wel: i should no.",
+		f"Hey <@{user}>: grammer you do very bad, lol.",
+		f"Sorry <@{user}>, I'm correcting @...'s spelling. I'll get back to you in just a second.'",
+		" ".join(map(lambda i: hex(ord(i))[2:], text)),
+		" ".join(map(lambda i: bin(ord(i))[2:], text)),
+		" ".join(map(lambda i: oct(ord(i))[2:], text)),
+		'"'+"".join(map(lambda i:random.choice((i.upper,i.lower))(),text))+'"'
+	]))
 
 @app.message(r"^-*?$")
 @app.message(r"^(\?|!)*$")
