@@ -132,12 +132,12 @@ def upvote(message, say, ack, client):
 
 	if channel == "C0255PRDR44": return
 	if user not in db:
-		client.chat_postEphemeral(
-			attachments = [],
-			channel = channel,
-			user = user,
-			text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
-		)
+# 		client.chat_postEphemeral(
+# 			attachments = [],
+# 			channel = channel,
+# 			user = user,
+# 			text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
+# 		)
 		return
 
 	userclient = WebClient(token=db[user])
@@ -187,12 +187,12 @@ def handle_edit(message, say, ack, client):
 
 	if channel == "C0255PRDR44": return
 	if user not in db:
-		client.chat_postEphemeral(
-			attachments = [],
-			channel = channel,
-			user = user,
-			text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
-		)
+# 		client.chat_postEphemeral(
+# 			attachments = [],
+# 			channel = channel,
+# 			user = user,
+# 			text = 'Hello. Are you trying to use Lightning Edit? Head over to https://lightningedit.colewilson.xyz to get started!',
+# 		)
 		return
 
 	userclient = WebClient(token=db[user])
@@ -220,7 +220,7 @@ def handle_edit(message, say, ack, client):
 			attachments = [],
 			channel = channel,
 			user = user,
-			text = 'Sorry, I couldn\'t find anything to delete! Prefix your text with a comma or something in order to prevent me from deleting it.',
+			text = 'Sorry, I couldn\'t find anything to edit! Prefix your text with a comma or something in order to prevent me from editing it.',
 		)
 	userclient.chat_delete(channel=channel,ts=thismessage['ts'])
 	print('>> message handled <<')
