@@ -155,21 +155,21 @@ def upvote(message, say, ack, client):
 	userclient.chat_delete(channel=channel,ts=thismessage['ts'])
 
 @app.event("app_mention")
-def random_response(say, body):
+def random_response(client, body):
 	db['test'] = time.time() # set SQL so it doesn't disconnect
 
 	text = body["event"]["text"]
 	user = body["event"]["user"]
-	say(random.choice([
+	client.chat_postMessage(text=random.choice([
 		f"Hi <@{user}>, I'm still here!",
 		f"<@{user}> spels reely wel: i should no.",
 		f"Hey <@{user}>: grammer you do very bad, lol.",
-		f"Sorry <@{user}>, I'm correcting @...'s spelling. I'll get back to you in just a second.'",
-		" ".join(map(lambda i: hex(ord(i))[2:], text)),
-		" ".join(map(lambda i: bin(ord(i))[2:], text)),
-		" ".join(map(lambda i: oct(ord(i))[2:], text)),
-		'"'+"".join(map(lambda i:random.choice((i.upper,i.lower))(),text))+'"'
-	]))
+		f"Sorry <@{user}>, I'm correcting @...'s spelling. I'll get back to you in just a second.",
+		f'<@{user}>:'+" ".join(map(lambda i: hex(ord(i))[2:], text)),
+		f'<@{user}>:'+" ".join(map(lambda i: bin(ord(i))[2:], text)),
+		f'<@{user}>:'+" ".join(map(lambda i: oct(ord(i))[2:], text)),
+		f'<@{user}>:" '+"".join(map(lambda i:random.choice((i.upper,i.lower))(),text))+'"'
+	]), thread_ts=body['event']['ts'], channel=body['event']['channel'])
 
 
 @app.message(r"^-*?$")
