@@ -178,6 +178,7 @@ def random_response(client, body):
 def handle_edit(message, say, ack, client):
 	ack()
 
+
 	thismessage = message
 	user = thismessage['user']
 	channel = thismessage['channel']
