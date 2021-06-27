@@ -123,7 +123,7 @@ def edit(old, new):
 def editors(command, ack, client):
 	ack()
 	user = command['user_id']
-	text = "*:zap: Lightning Edit Users:*\n"
+	text = f"*:zap: Lightning Edit Users:* _({len(db.keys())})_\n"
 	for u in db.keys():
 		text += f":large_green_circle: <@{u}>\n"
 	text += f"\nYou, (<@{user}>), have "
