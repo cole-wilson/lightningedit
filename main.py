@@ -1,3 +1,5 @@
+print('running.')
+
 import os
 import re
 import time
@@ -11,8 +13,6 @@ from slack_sdk import WebClient
 from spellchecker import SpellChecker
 from fuzzywuzzy import fuzz
 from db import SQL
-
-print('running.')
 
 logging.basicConfig(level=logging.WARNING)
 spell = SpellChecker()
@@ -36,7 +36,6 @@ def success(args):
 def failure(args):
 	return BoltResponse(status=args.suggested_status_code,body="failure :(")
 
-
 app = App(
 	signing_secret=os.environ.get("SIGNING_SECRET"),
 	oauth_settings=OAuthSettings(
@@ -55,6 +54,7 @@ def edit(old, new):
 	new = new.strip(' ')
 	sedstyle = r"s?(/|!)(.*?)\1(.*?)\1.*?"
 	
+	# correct everything
 	if new == "":
 		# spellcheck
 		out = ""
@@ -65,6 +65,8 @@ def edit(old, new):
 			else:
 				out += spell.correction(word) + " "
 		return out
+
+	# sed style replace
 	elif re.match(sedstyle, new):
 		_, a, b, f = re.findall(sedstyle, new)[0]
 		b = re.sub(r"\$(\d*)", r"\\1", b)
@@ -73,32 +75,49 @@ def edit(old, new):
 			if hasattr(re, flag.upper()):
 				flags.append(getattr(re, flag.upper()))
 		return re.sub(a, b, old, *flags)
+
+	# append
 	elif new.startswith('+'):
 		# append no matter what
 		return old + " " + new[1:]
+
+	# overwrite
 	elif new.startswith('!'):
 		# completely redo
 		return new[1:]
+
+	# add punctuation
 	elif re.match(r"^(\?|!)*$", new):
 		return old + new
 
+	# strikethrough
 	elif re.match('^-*?$', new):
 		return "~" + old + "~"
-	elif re.match('^(<@.*?>\s?)*$', new):
-		# add mention
-		return new + " " + old
-	elif len(new.split()) == 1:
-		# fuzzy replacement
-		ranked = [(word, fuzz.ratio(new, word)) for word in old.split()]
-		bestmatch = max(ranked, key=lambda i: i[1])
-		if bestmatch[1] > 50:
-			return old.replace(bestmatch[0], new)
-		else:
-			return old + " " + new
-	else:
-		# just append
-		return old + " " + new
 
+	# add mentions
+	elif re.match('^(<@.*?>\s?)*$', new):
+		return new + " " + old
+
+	# fuzzy replacement
+	else:
+		threshold = 55
+		def _fuzzypos(word, string, precedence=0):
+			string = string.split()
+			enum = enumerate(map(lambda i:fuzz.ratio(word,i),string))
+			maxi = sorted(enum, key=lambda i:i[1])
+			top = maxi[-1][1] # the top ratio
+			maxi = list(filter(lambda i:i[1]==top, maxi))[precedence]
+			if maxi[1] < threshold:
+				return None
+			return maxi[0]
+		s_index = _fuzzypos(new.split()[0], old)
+		e_index = _fuzzypos(new.split()[-1], old, precedence=-1)
+		section = " ".join(old.split()[s_index:e_index+1])
+		ratio = fuzz.partial_token_sort_ratio(section, new)
+		if ratio >= threshold:
+			return old.replace(section, new, 1)
+		else:
+			return new + " " + old
 
 @app.command("/editors")
 def editors(command, ack, client):
@@ -169,7 +188,6 @@ def random_response(client, body):
 		f'<@{user}>:'+" ".join(map(lambda i: oct(ord(i))[2:], text)),
 		f'<@{user}>:" '+"".join(map(lambda i:random.choice((i.upper,i.lower))(),text))+'"'
 	]), thread_ts=body['event']['ts'], channel=body['event']['channel'])
-
 
 @app.message(r"^-*?$")
 @app.message(r"^(\?|!)*$")
