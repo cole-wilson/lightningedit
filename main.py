@@ -104,26 +104,33 @@ def edit(old, new):
 		def _fuzzypos(word, string, precedence=0):
 			string = string.split()
 			enum = enumerate(map(lambda i:fuzz.ratio(word,i),string))
-			maxi = sorted(enum, key=lambda i:i[1])
+			maxi = sorted(filter(lambda i:i[1]<100,enum),key=lambda i:i[1])
+			if len(maxi) == 0:
+				return False
 			top = maxi[-1][1] # the top ratio
-			maxi = list(filter(lambda i:i[1]==top, maxi))[precedence]
+			maxi = list(filter(lambda i:i[1]==top and i[1], maxi))[precedence]
 			if maxi[1] < threshold:
 				return None
 			return maxi[0]
+
 		s_index = _fuzzypos(new.split()[0], old)
 		e_index = _fuzzypos(new.split()[-1], old, precedence=-1)
+		if s_index is None or e_index is None:
+			print(old + " " + new)
+		if s_index is False or e_index is False:
+			print(old)
 		section = " ".join(old.split()[s_index:e_index+1])
 		ratio = fuzz.partial_token_sort_ratio(section, new)
 		if ratio >= threshold:
-			return old.replace(section, new, 1)
+			print(old.replace(section, new, 1))
 		else:
-			return new + " " + old
+			print(old + " " + new)
 
 @app.command("/editors")
 def editors(command, ack, client):
 	ack()
 	user = command['user_id']
-	text = f"*:zap: Lightning Edit Users:* _({len(db.keys())})_\n"
+	text = f"*:zap: Lightning Edit Users:* _({len(db.keys()) - 1})_\n"
 	for u in db.keys():
 		text += f":large_green_circle: <@{u}>\n"
 	text += f"\nYou, (<@{user}>), have "
