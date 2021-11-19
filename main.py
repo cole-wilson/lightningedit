@@ -39,7 +39,7 @@ def failure(args):
 app = App(
 	signing_secret=os.environ.get("SIGNING_SECRET"),
 	oauth_settings=OAuthSettings(
-		token=os.environ.get("TOKEN"),
+# 		token=os.environ.get("TOKEN"),
 		client_id=os.environ.get("CLIENT_ID"),
 		client_secret=os.environ.get("CLIENT_SECRET"),
 		scopes=["commands", "chat:write.public", "chat:write"],
