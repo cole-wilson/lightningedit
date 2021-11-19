@@ -43,7 +43,7 @@ app = App(
 		client_secret=os.environ.get("CLIENT_SECRET"),
 		scopes=["commands", "chat:write.public", "chat:write"],
 		user_scopes=["chat:write", "channels:history", "groups:history", "im:history", "mpim:history", "reactions:write"],
-		redirect_uri="/slack/oauth_redirect",
+		redirect_uri=None,
 		install_path="/",
 		redirect_uri_path="/slack/oauth_redirect",
 		callback_options=CallbackOptions(success=success, failure=failure),
